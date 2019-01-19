@@ -196,7 +196,6 @@ def get_movie_list_details(all_movie):
 		url = all_movie[i]['url']
 		#function 4
 		movie_details =scrape_movie_details(url)
-		pprint(movie_details)
 		movies_detail_list.append(movie_details)
 	return movies_detail_list
 
@@ -282,6 +281,52 @@ def scrape_movie_cast(url):
 		with open(castfolder+cfile, "w") as f:
 				f.write(json.dumps(movie_caste))
 		return movie_caste
+
+
+# function 11 task 14
+def analyse_co_actors(movies_detail_list):
+	coactors = {}
+	for i in range(50):
+		for j in range(1,len(movies_detail_list[i]['caste'])):
+			if movies_detail_list[i]['caste'][0]['imdb_id'] in coactors:
+				print("hai 1")
+			# for j in range(1,len(movies_detail_list[i]['caste'])):
+				#demo = coactors[movies_detail_list[i]['caste'][0]['imdb_id']]
+				#print("rahul",coactors[movies_detail_list[i]['caste'][0]['imdb_id']]['frequent_co_actors'],"pk",(movies_detail_list[i]['caste'][j]['imdb_id']),"rahul")
+				if (movies_detail_list[i]['caste'][j]['imdb_id']) in coactors[movies_detail_list[i]['caste'][0]['imdb_id']]['frequent_co_actors']:
+					print("hai 2")
+					num_of_movies = movies_detail_list[i]['imdb_id']['caste'][j]
+					num_of_movies['num_movies'] += 1
+				else:
+					print("hai 3")
+					num_of_movies = movies_detail_list[i]['caste'][j]
+					num_of_movies['num_movies'] = 1
+					demo['frequent_co_actors'].append(num_of_movies)
+			else:
+				coactors[movies_detail_list[i]['caste'][0]['imdb_id']] = {}
+				demo = coactors[movies_detail_list[i]['caste'][0]['imdb_id']]
+				demo['name'] =movies_detail_list[i]['caste'][0]['name'] 
+				demo['frequent_co_actors'] = []
+				print("hai 4")
+				# for j in range(1,len(movies_detail_list[i]['caste'])):
+				num_of_movies = movies_detail_list[i]['caste'][j]
+				num_of_movies['num_movies'] = 1
+				demo['frequent_co_actors'].append(num_of_movies)
+	return coactors
+
+# function 12 task 15
+def analyse_actors(movies_detail_list):
+	actors_total_movie = {}
+	for i in range(250):
+		for j in range(1,len(movies_detail_list[i]['caste'])):
+			if movies_detail_list[i]['caste'][j]['imdb_id'] in actors_total_movie:
+				demo['num_movies'] += 1
+			else:
+				actors_total_movie[movies_detail_list[i]['caste'][j]['imdb_id']] = {}
+				demo = actors_total_movie[movies_detail_list[i]['caste'][j]['imdb_id']]
+				demo['name'] =movies_detail_list[i]['caste'][j]['name'] 
+				demo['num_movies'] = 1
+	return actors_total_movie
 #function 1
 all_movie = scrape_top_list(imdb_data)
 
@@ -296,7 +341,6 @@ movies_detail_list =get_movie_list_details(all_movie)
 
 # function 6 
 languages = analyse_movies_language(movies_detail_list)
-
 # function 7
 directors=analyse_movies_directors(movies_detail_list)
 
@@ -306,6 +350,11 @@ directorLanguageMovie=analyse_language_and_directors(movies_detail_list)
 # function 9
 genres = analyse_movies_genre(movies_detail_list)
 
+# function 11 task 14
+coactors=analyse_co_actors(movies_detail_list)
+
+# function 12 task 15
+actors_total_movie=analyse_actors(movies_detail_list)
 
 # movie_caste_url = "https://www.imdb.com/title/tt0066763/"
 # scrape_movie_cast(movie_caste_url)
